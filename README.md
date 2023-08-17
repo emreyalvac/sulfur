@@ -1,4 +1,6 @@
 # Sulfur
+![alt text](sulfur.jpeg)
+
 #### WIP
 
 https://www.youtube.com/watch?v=PAAvNmoqDq0 <br/>
