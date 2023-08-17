@@ -1,0 +1,36 @@
+sulfur:
+  - name: "Mongo to BQ"
+    cron: "1 * * * *"
+    source:
+      name: "emre"
+      type: "mongo"
+      host: "127.0.0.1"
+      port: "27017"
+      user: "test"
+      password: "test"
+      database: "yeni_database"
+      collection: "yeni_collection"
+    destination:
+      name: "emre"
+      type: "bigquery"
+      credentials: "./service_key.json"
+      project_id: "hb-kubernetes-operator"
+      dataset_id: "test"
+      table_id: "test"
+
+
+
+  - name: "Redis to Mongo"
+    cron: "1 * * * *"
+    source:
+      name: "emre"
+      type: "redis"
+      host: "127.0.0.1"
+      port: "27017"
+      user: "test"
+      password: "test"
+      database: "yeni_database"
+      collection: "yeni_collection"
+    destination:
+      name: "emre"
+      type: "mongo"
