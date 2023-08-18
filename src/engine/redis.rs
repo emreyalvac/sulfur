@@ -1,29 +1,33 @@
 use std::fmt::Debug;
 use async_trait::async_trait;
-use crate::core::Engine;
 use redis::{Client, Commands};
 use serde_json::Value;
+use crate::config::config::Engine;
+use crate::core::engine::TEngine;
 
 pub struct Redis {
     connection: Client,
+    engine: Engine,
 }
 
 #[async_trait]
-impl Engine for Redis {
-    async fn new() -> Self {
-        let mut client = Client::open("redis://127.0.0.1/").unwrap();
+impl TEngine for Redis {
+    async fn new(engine: Engine) -> Self {
+        // TODO: Validation
 
-        Self { connection: client }
+        let connection = Client::open(engine.host.clone().unwrap()).unwrap();
+
+        Self { connection, engine }
     }
 
     async fn get(&mut self) -> Value {
-        let data = self.connection.get::<String, String>("test".to_string()).unwrap();
+        let data = self.connection.get::<String, String>(self.engine.key.clone().unwrap()).unwrap();
 
         return serde_json::from_str(data.as_str()).unwrap();
     }
 
-    async fn set(&mut self, location: String, value: Value) -> bool {
-        match self.connection.set::<String, String, String>(location, value.to_string()) {
+    async fn set(&mut self, value: Value) -> bool {
+        match self.connection.set::<String, String, String>(self.engine.key.clone().unwrap(), value.to_string()) {
             Ok(_) => true,
             Err(_) => false
         }

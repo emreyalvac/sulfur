@@ -1,33 +1,35 @@
 use std::fmt::Debug;
 use async_trait::async_trait;
 use futures::{StreamExt};
-use mongodb::bson::{doc, Document};
+use mongodb::bson::{Document};
 use mongodb::{bson, Client};
-use mongodb::options::{ClientOptions, ServerApi, ServerApiVersion};
+use mongodb::options::{ClientOptions};
 use serde_json::Value;
-use crate::core::Engine;
+use crate::config::config::Engine;
+use crate::core::engine::TEngine;
 
 pub struct Mongo {
     connection: Client,
+    engine: Engine,
 }
 
 #[async_trait]
-impl Engine for Mongo {
-    async fn new() -> Self {
-        let uri = "mongodb://127.0.0.1:27017";
-        let mut client_options =
+impl TEngine for Mongo {
+    async fn new(engine: Engine) -> Self {
+        // TODO: Validation
+
+        let uri = engine.host.clone().unwrap();
+        let client_options =
             ClientOptions::parse(uri)
                 .await.unwrap();
-        let server_api = ServerApi::builder().version(ServerApiVersion::V1).build();
-        client_options.server_api = Some(server_api);
         let client = Client::with_options(client_options).unwrap();
 
-        Self { connection: client }
+        Self { connection: client, engine }
     }
 
     async fn get(&mut self) -> Value {
-        let db = self.connection.database("new_db");
-        let mut find = db.collection::<Document>("new_collection").find(None, None).await.unwrap();
+        let db = self.connection.database(self.engine.database.clone().unwrap().as_str());
+        let mut find = db.collection::<Document>(self.engine.collection.clone().unwrap().as_str()).find(None, None).await.unwrap();
         let mut data: Vec<Value> = Vec::new();
 
         while let Some(Ok(doc)) = find.next().await {
@@ -37,9 +39,9 @@ impl Engine for Mongo {
         return serde_json::to_value(data).unwrap();
     }
 
-    async fn set(&mut self, location: String, value: Value) -> bool {
-        let db = self.connection.database("yeni_db");
-        let mut collection = db.collection::<Document>("yeni_collection");
+    async fn set(&mut self, value: Value) -> bool {
+        let db = self.connection.database(self.engine.database.clone().unwrap().as_str());
+        let mut collection = db.collection::<Document>(self.engine.collection.clone().unwrap().as_str());
 
         if value.is_array() {
             let ar = value.as_array().unwrap();

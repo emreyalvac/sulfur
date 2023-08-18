@@ -4,29 +4,33 @@ use gcp_bigquery_client::Client;
 use gcp_bigquery_client::model::query_request::QueryRequest;
 use gcp_bigquery_client::model::table_data_insert_all_request::TableDataInsertAllRequest;
 use serde_json::Value;
-use crate::core::Engine;
+use crate::config::config::Engine;
+use crate::core::engine::TEngine;
 
 pub struct BigQuery {
-    pub connection: Client,
+    connection: Client,
+    engine: Engine,
 }
 
 #[async_trait]
-impl Engine for BigQuery {
-    async fn new() -> Self {
-        let client = Client::from_service_account_key_file("./service_key.json").await.unwrap();
+impl TEngine for BigQuery {
+    async fn new(engine: Engine) -> Self {
+        // Validation
+
+        let connection = Client::from_service_account_key_file(engine.credentials.clone().unwrap().as_str()).await.unwrap();
 
 
-        Self { connection: client }
+        Self { connection, engine }
     }
 
     async fn get(&mut self) -> Value {
         let mut rs = self.connection
             .job()
             .query(
-                "hb-kubernetes-operator",
+                self.engine.project_id.clone().unwrap().as_str(),
                 QueryRequest::new(format!(
                     "SELECT * FROM `{}.{}.{}`",
-                    "hb-kubernetes-operator", "test", "test"
+                    self.engine.project_id.clone().unwrap(), self.engine.dataset_id.clone().unwrap(), self.engine.table_id.clone().unwrap()
                 )),
             )
             .await.unwrap();
@@ -45,7 +49,7 @@ impl Engine for BigQuery {
         return serde_json::to_value(values).unwrap();
     }
 
-    async fn set(&mut self, location: String, value: Value) -> bool {
+    async fn set(&mut self, value: Value) -> bool {
         let mut insert_request = TableDataInsertAllRequest::new();
         insert_request.ignore_unknown_values();
 
@@ -60,7 +64,7 @@ impl Engine for BigQuery {
 
         match self.connection
             .tabledata()
-            .insert_all("hb-kubernetes-operator", "test", "test", insert_request)
+            .insert_all(self.engine.project_id.clone().unwrap().as_str(), self.engine.dataset_id.clone().unwrap().as_str(), self.engine.table_id.clone().unwrap().as_str(), insert_request)
             .await {
             Ok(e) => {}
             Err(e) => {}
