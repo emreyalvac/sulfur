@@ -1,3 +1,4 @@
+use std::io::{Read, Write};
 use clap::Parser;
 use crate::config::config_reader::{ConfigReader};
 use crate::core::engine::{TEngine};
@@ -22,13 +23,13 @@ pub async fn _reactor() {
     let config = ConfigReader::new(args.config.as_str());
 
     for sulfur in config.sulfur {
-        let source = select_engine(sulfur.source.r#type.clone().unwrap(), (&sulfur).source.clone()).await;
-        let destination = select_engine(sulfur.destination.r#type.clone().unwrap(), (&sulfur).destination.clone()).await;
+        let source = select_engine(sulfur.source.r#type.clone().unwrap(), (&sulfur).source.clone(), sulfur.transform.clone()).await;
+        let destination = select_engine(sulfur.destination.r#type.clone().unwrap(), (&sulfur).destination.clone(), sulfur.transform.clone()).await;
 
         engines.push(EngineFlow { source, destination });
     }
 
-    for mut x in engines {
-        x.destination.set(x.source.get().await).await;
+    for mut flow in engines {
+        flow.destination.set(flow.source.get().await).await;
     }
 }

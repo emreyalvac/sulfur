@@ -5,10 +5,12 @@ pub struct Config {
     pub sulfur: Vec<Sulfur>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Sulfur {
     pub name: String,
     pub cron: Option<String>,
+    pub transform: Option<Transform>,
+    pub truncate: Option<bool>,
     pub source: Engine,
     pub destination: Engine,
 }
@@ -18,8 +20,7 @@ pub struct Engine {
     pub r#type: Option<String>,
     pub host: Option<String>,
     pub port: Option<String>,
-    pub user: Option<String>,
-    pub password: Option<String>,
+    pub auth: Option<Auth>,
     pub credentials: Option<String>,
 
     // Database
@@ -34,4 +35,16 @@ pub struct Engine {
     pub project_id: Option<String>,
     pub dataset_id: Option<String>,
     pub table_id: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Auth {
+    pub username: Option<String>,
+    pub password: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Transform {
+    pub file: Option<String>,
+    pub r#fn: Option<String>,
 }

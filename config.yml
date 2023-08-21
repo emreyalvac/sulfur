@@ -1,17 +1,22 @@
 sulfur:
   - name: "Mongo to BQ"
     cron: "1 * * * *"
-    destination:
+    truncate: false
+    transform:
+      file: './transform.py'
+      fn: 'advanced_transform'
+    source:
       name: "emre"
       type: "Mongo"
-      host: "mongodb://127.0.0.1/"
+      host: "127.0.0.1"
       port: "27017"
-      user: "test"
-      password: "test"
-      database: "yeni_db"
-      collection: "testt_etmek"
-    source:
+      auth:
+        username: ""
+        password: ""
+      database: "new_db"
+      collection: "ffff"
+    destination:
       name: "emre"
       type: "redis"
       host: "redis://127.0.0.1"
-      key: "hoba"
+      key: "yeniii"

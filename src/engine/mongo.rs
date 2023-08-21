@@ -3,28 +3,30 @@ use async_trait::async_trait;
 use futures::{StreamExt};
 use mongodb::bson::{Document};
 use mongodb::{bson, Client};
-use mongodb::options::{ClientOptions};
+use mongodb::options::{ClientOptions, ServerAddress};
 use serde_json::Value;
-use crate::config::config::Engine;
+use crate::config::config::{Engine, Transform};
 use crate::core::engine::TEngine;
+use crate::transform::python::transform;
 
 pub struct Mongo {
     connection: Client,
     engine: Engine,
+    transform: Option<Transform>,
 }
 
 #[async_trait]
 impl TEngine for Mongo {
-    async fn new(engine: Engine) -> Self {
+    async fn new(engine: Engine, transform: Option<Transform>) -> Self {
         // TODO: Validation
 
-        let uri = engine.host.clone().unwrap();
-        let client_options =
-            ClientOptions::parse(uri)
-                .await.unwrap();
-        let client = Client::with_options(client_options).unwrap();
+        let mut client_options =
+            ClientOptions::builder()
+                .hosts(vec![ServerAddress::parse(format!("{}:{}", engine.host.clone().unwrap(), engine.port.clone().unwrap())).unwrap()]);
 
-        Self { connection: client, engine }
+        let client = Client::with_options(client_options.build()).unwrap();
+
+        Self { connection: client, engine, transform }
     }
 
     async fn get(&mut self) -> Value {
@@ -36,7 +38,9 @@ impl TEngine for Mongo {
             data.push(serde_json::to_value(&doc).unwrap());
         }
 
-        return serde_json::to_value(data).unwrap();
+        let transform_data = transform(serde_json::from_str(serde_json::to_string(&data).unwrap().as_str()).unwrap(), self.transform.clone());
+
+        return transform_data
     }
 
     async fn set(&mut self, value: Value) -> bool {

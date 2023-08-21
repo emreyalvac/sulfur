@@ -144,11 +144,9 @@ sneak peek at some potential storage engines that might be added in the future:
 Stay tuned as we continue to explore and add more storage engine options to the Sulfur platform. We're excited to
 provide you with a broader range of choices for your data storage needs!
 
-## Upcoming Feature: Advanced Data Transformation
+## Advanced Data Transformation
 
-At Sulfur, we're dedicated to evolving our platform to meet your needs. We're excited to introduce an upcoming feature:
-**Advanced Data Transformation**. This feature will empower you to perform intricate data transformations within the
-Sulfur pipeline, enabling complex calculations, custom formatting, and enriched data outputs.
+At Sulfur, we're dedicated to evolving our platform to meet your needs. We're excited to introduce a feature:
 
 ### How It Works
 
@@ -158,33 +156,43 @@ mathematical operations to conditional logic, this feature grants you unparallel
 Stay tuned as we work diligently to unveil this enhancement. Your data transformation possibilities are about to expand
 like never before!
 
-## Contributing to the Evolution
+## Advanced Data Transformation using Python
 
-As we shape this feature, your input is invaluable. If you have specific ideas, use cases, or requirements for the
-Advanced Data Transformation feature, we encourage you to [contribute to our roadmap](CONTRIBUTING.md). Your insights
-will help us tailor this enhancement to cater to your unique data processing needs.
+Sulfur enables you to harness the power of custom Python scripts for advanced data transformation during the pipeline process. By integrating Python scripts, you can perform complex data manipulations, calculations, and enrichments before the data is forwarded to its destination.
 
-Thank you for being an essential part of the Sulfur community as we strive to make data transformation even more
-impactful!
+### Implementing Advanced Transformation
 
-### Example Preview
+To demonstrate the power of custom Python scripts for data transformation, we've provided an example `advanced_transform` function that showcases a basic transformation:
 
 ```python
-# Example of Advanced Data Transformation (Python)
+import json
 
-def advanced_transformation(data):
-    # Implement your sophisticated data transformation here
-    transformed_data = {
-        "key": data["key"],
-        "value": data["value"] ** 2  # Example: Squaring the value
-    }
-    return transformed_data
+def advanced_transform(*args):
+   # Unpack the arguments tuple
+   data_string = args[0]
+
+   # Load the JSON data
+   data = json.loads(data_string)
+
+   # Perform your advanced transformation here
+   transformed_data = {
+      "name": "TRANSFORMED",
+      "original_data": data
+   }
+
+   # Convert the transformed data back to a JSON string
+   transformed_json = json.dumps(transformed_data)
+
+   return transformed_json
 ```
 
 ```yaml
 sulfur:
   - name: "Pipeline1"
     cron: "0 0 * * *"
+    transform:
+      file: './transform.py'
+      fn: 'advanced_transform'
     source:
       type: "MongoDB"
       host: "mongodb.example.com"
@@ -193,8 +201,6 @@ sulfur:
       password: "password"
       database: "db_name"
       collection: "collection_name"
-    custom_middleware: "path/to/custom_middleware.py"
-    fn: "advanced_transformation"
     destination:
       type: "Redis"
       host: "redis.example.com"

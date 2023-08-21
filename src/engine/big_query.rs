@@ -4,26 +4,29 @@ use gcp_bigquery_client::Client;
 use gcp_bigquery_client::model::query_request::QueryRequest;
 use gcp_bigquery_client::model::table_data_insert_all_request::TableDataInsertAllRequest;
 use serde_json::Value;
-use crate::config::config::Engine;
+use crate::config::config::{Engine, Transform};
 use crate::core::engine::TEngine;
+use crate::transform::python::transform;
 
 pub struct BigQuery {
     connection: Client,
     engine: Engine,
+    transform: Option<Transform>,
 }
 
 #[async_trait]
 impl TEngine for BigQuery {
-    async fn new(engine: Engine) -> Self {
+    async fn new(engine: Engine, transform: Option<Transform>) -> Self {
         // Validation
 
         let connection = Client::from_service_account_key_file(engine.credentials.clone().unwrap().as_str()).await.unwrap();
 
-
-        Self { connection, engine }
+        Self { connection, engine, transform }
     }
 
     async fn get(&mut self) -> Value {
+        // TODO: Query will be dynamic
+
         let mut rs = self.connection
             .job()
             .query(
@@ -46,7 +49,9 @@ impl TEngine for BigQuery {
             values.push(value);
         };
 
-        return serde_json::to_value(values).unwrap();
+        let transform_data = transform(serde_json::from_str(serde_json::to_string(&values).unwrap().as_str()).unwrap(), self.transform.clone());
+
+        return transform_data;
     }
 
     async fn set(&mut self, value: Value) -> bool {
