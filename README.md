@@ -24,7 +24,7 @@ potential of Sulfur and turn raw data into refined intelligence.
 2. Navigate to the project directory:
 
     ```sh
-    cd sulfur-sink
+    cd sulfur
     ```
 
 3. Install dependencies:
