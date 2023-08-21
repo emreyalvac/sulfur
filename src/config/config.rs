@@ -35,6 +35,9 @@ pub struct Engine {
     pub project_id: Option<String>,
     pub dataset_id: Option<String>,
     pub table_id: Option<String>,
+
+    // ElasticSearch
+    pub index: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
