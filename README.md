@@ -18,7 +18,7 @@ potential of Sulfur and turn raw data into refined intelligence.
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/emreyalvac/sulfur-sink.git
+    git clone https://github.com/emreyalvac/sulfur.git
     ```
 
 2. Navigate to the project directory:
