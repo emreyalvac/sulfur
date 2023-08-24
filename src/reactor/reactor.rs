@@ -1,8 +1,10 @@
 use std::io::{Read, Write};
 use clap::Parser;
+use crate::config::config::Transform;
 use crate::config::config_reader::{ConfigReader};
 use crate::core::engine::{TEngine};
 use crate::core::select_engine::select_engine;
+use crate::transform::python::transform;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -14,6 +16,7 @@ struct Args {
 struct EngineFlow {
     source: Box<dyn TEngine>,
     destination: Box<dyn TEngine>,
+    transform: Option<Transform>,
 }
 
 pub async fn _reactor() {
@@ -26,10 +29,12 @@ pub async fn _reactor() {
         let source = select_engine(sulfur.source.r#type.clone().unwrap(), (&sulfur).source.clone(), sulfur.transform.clone()).await;
         let destination = select_engine(sulfur.destination.r#type.clone().unwrap(), (&sulfur).destination.clone(), sulfur.transform.clone()).await;
 
-        engines.push(EngineFlow { source, destination });
+        engines.push(EngineFlow { source, destination, transform: sulfur.transform });
     }
 
     for mut flow in engines {
-        flow.destination.set(flow.source.get().await).await;
+        let transformed_data = transform(flow.source.get().await, flow.transform);
+
+        flow.destination.set(transformed_data).await;
     }
 }

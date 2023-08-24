@@ -4,7 +4,6 @@ use redis::{Client, Commands};
 use serde_json::Value;
 use crate::config::config::{Engine, Transform};
 use crate::core::engine::TEngine;
-use crate::transform::python::transform;
 
 pub struct Redis {
     connection: Client,
@@ -24,9 +23,8 @@ impl TEngine for Redis {
 
     async fn get(&mut self) -> Value {
         let data = self.connection.get::<String, String>(self.engine.key.clone().unwrap()).unwrap();
-        let transform_data = transform(serde_json::from_str(data.as_str()).unwrap(), self.transform.clone());
 
-        return transform_data;
+        serde_json::from_str(data.as_str()).unwrap()
     }
 
     async fn set(&mut self, value: Value) -> bool {

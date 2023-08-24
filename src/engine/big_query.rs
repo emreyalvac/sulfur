@@ -49,9 +49,7 @@ impl TEngine for BigQuery {
             values.push(value);
         };
 
-        let transform_data = transform(serde_json::from_str(serde_json::to_string(&values).unwrap().as_str()).unwrap(), self.transform.clone());
-
-        return transform_data;
+        serde_json::to_value(values).unwrap()
     }
 
     async fn set(&mut self, value: Value) -> bool {

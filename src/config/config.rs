@@ -38,6 +38,7 @@ pub struct Engine {
 
     // ElasticSearch
     pub index: Option<String>,
+    pub size: Option<i32>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

@@ -38,9 +38,7 @@ impl TEngine for Mongo {
             data.push(serde_json::to_value(&doc).unwrap());
         }
 
-        let transform_data = transform(serde_json::from_str(serde_json::to_string(&data).unwrap().as_str()).unwrap(), self.transform.clone());
-
-        return transform_data
+        serde_json::to_value(data).unwrap()
     }
 
     async fn set(&mut self, value: Value) -> bool {

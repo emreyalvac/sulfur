@@ -1,13 +1,12 @@
 use async_trait::async_trait;
-use elastic::AsyncClient;
+use elasticsearch::{Elasticsearch, IndexParts, SearchParts};
+use elasticsearch::http::transport::Transport;
 use serde_json::{json, Value};
 use crate::config::config::{Engine, Transform};
 use crate::core::engine::TEngine;
-use elastic::prelude::*;
-use crate::transform::python::transform;
 
 pub struct ElasticSearch {
-    connection: elastic::SyncClient,
+    connection: Elasticsearch,
     engine: Engine,
     transform: Option<Transform>,
 }
@@ -15,7 +14,8 @@ pub struct ElasticSearch {
 #[async_trait]
 impl TEngine for ElasticSearch {
     async fn new(engine: Engine, transform: Option<Transform>) -> Self where Self: Sized {
-        let connection = SyncClient::builder().static_node(engine.host.clone().unwrap().as_str()).build().unwrap();
+        let transport = Transport::single_node(engine.host.clone().unwrap().as_str()).unwrap();
+        let connection = Elasticsearch::new(transport);
 
 
         ElasticSearch {
@@ -26,21 +26,32 @@ impl TEngine for ElasticSearch {
     }
 
     async fn get(&mut self) -> Value {
-        let res = self.connection.search::<Value>()
-            .index(self.engine.index.clone().unwrap())
+        let search_response = self.connection
+            .search(SearchParts::Index(&[self.engine.index.clone().unwrap().as_str()]))
             .body(json!({
-                    "size": 10000,
-                    "query": {
-                        "match_all": {
-                        }
-                    }
-                }))
-            .send().unwrap();
+            "query": {
+                "match_all": {}
+            }
+        }))
+            .allow_no_indices(true)
+            .send()
+            .await.unwrap();
 
-        transform(Value::Null, self.transform.clone())
+        let response_body = search_response.json::<Value>().await.unwrap();
+
+        response_body
     }
 
     async fn set(&mut self, value: Value) -> bool {
-        true
+        let response = self.connection
+            .index(IndexParts::Index(self.engine.index.clone().unwrap().as_str()))
+            .body(value)
+            .send()
+            .await;
+
+        match response {
+            Ok(_) => true,
+            Err(_) => false
+        }
     }
 }
