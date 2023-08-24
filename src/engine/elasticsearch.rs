@@ -7,13 +7,12 @@ use crate::core::engine::TEngine;
 
 pub struct ElasticSearch {
     connection: Elasticsearch,
-    engine: Engine,
-    transform: Option<Transform>,
+    engine: Engine
 }
 
 #[async_trait]
 impl TEngine for ElasticSearch {
-    async fn new(engine: Engine, transform: Option<Transform>) -> Self where Self: Sized {
+    async fn new(engine: Engine) -> Self where Self: Sized {
         let transport = Transport::single_node(engine.host.clone().unwrap().as_str()).unwrap();
         let connection = Elasticsearch::new(transport);
 
@@ -21,7 +20,6 @@ impl TEngine for ElasticSearch {
         ElasticSearch {
             connection,
             engine,
-            transform,
         }
     }
 

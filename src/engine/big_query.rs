@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+
 use async_trait::async_trait;
 use gcp_bigquery_client::Client;
 use gcp_bigquery_client::model::query_request::QueryRequest;
@@ -6,22 +6,21 @@ use gcp_bigquery_client::model::table_data_insert_all_request::TableDataInsertAl
 use serde_json::Value;
 use crate::config::config::{Engine, Transform};
 use crate::core::engine::TEngine;
-use crate::transform::python::transform;
+
 
 pub struct BigQuery {
     connection: Client,
-    engine: Engine,
-    transform: Option<Transform>,
+    engine: Engine
 }
 
 #[async_trait]
 impl TEngine for BigQuery {
-    async fn new(engine: Engine, transform: Option<Transform>) -> Self {
+    async fn new(engine: Engine) -> Self {
         // Validation
 
         let connection = Client::from_service_account_key_file(engine.credentials.clone().unwrap().as_str()).await.unwrap();
 
-        Self { connection, engine, transform }
+        Self { connection, engine }
     }
 
     async fn get(&mut self) -> Value {
@@ -69,8 +68,8 @@ impl TEngine for BigQuery {
             .tabledata()
             .insert_all(self.engine.project_id.clone().unwrap().as_str(), self.engine.dataset_id.clone().unwrap().as_str(), self.engine.table_id.clone().unwrap().as_str(), insert_request)
             .await {
-            Ok(e) => {}
-            Err(e) => {}
+            Ok(_e) => {}
+            Err(_e) => {}
         }
 
         return true;

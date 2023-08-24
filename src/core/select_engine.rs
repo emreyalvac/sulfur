@@ -9,14 +9,14 @@ pub async fn select_engine(r#type: String, config: Engine, transform: Option<Tra
     // TODO: Move to Compile time
 
     if r#type == "Mongo" {
-        return Box::new(Mongo::new(config, transform).await);
+        return Box::new(Mongo::new(config).await);
     } else if r#type == "Redis" {
-        return Box::new(Redis::new(config, transform).await);
+        return Box::new(Redis::new(config).await);
     } else if r#type == "BigQuery" {
-        return Box::new(BigQuery::new(config, transform).await);
+        return Box::new(BigQuery::new(config).await);
     } else if r#type == "ElasticSearch" {
-        return Box::new(ElasticSearch::new(config, transform).await);
+        return Box::new(ElasticSearch::new(config).await);
     }
 
-    return Box::new(Redis::new(config, transform).await);
+    return Box::new(Redis::new(config).await);
 }

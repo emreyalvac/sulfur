@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+
 use async_trait::async_trait;
 use futures::{StreamExt};
 use mongodb::bson::{Document};
@@ -7,26 +7,25 @@ use mongodb::options::{ClientOptions, ServerAddress};
 use serde_json::Value;
 use crate::config::config::{Engine, Transform};
 use crate::core::engine::TEngine;
-use crate::transform::python::transform;
+
 
 pub struct Mongo {
     connection: Client,
-    engine: Engine,
-    transform: Option<Transform>,
+    engine: Engine
 }
 
 #[async_trait]
 impl TEngine for Mongo {
-    async fn new(engine: Engine, transform: Option<Transform>) -> Self {
+    async fn new(engine: Engine) -> Self {
         // TODO: Validation
 
-        let mut client_options =
+        let client_options =
             ClientOptions::builder()
                 .hosts(vec![ServerAddress::parse(format!("{}:{}", engine.host.clone().unwrap(), engine.port.clone().unwrap())).unwrap()]);
 
         let client = Client::with_options(client_options.build()).unwrap();
 
-        Self { connection: client, engine, transform }
+        Self { connection: client, engine }
     }
 
     async fn get(&mut self) -> Value {
@@ -43,7 +42,7 @@ impl TEngine for Mongo {
 
     async fn set(&mut self, value: Value) -> bool {
         let db = self.connection.database(self.engine.database.clone().unwrap().as_str());
-        let mut collection = db.collection::<Document>(self.engine.collection.clone().unwrap().as_str());
+        let collection = db.collection::<Document>(self.engine.collection.clone().unwrap().as_str());
 
         if value.is_array() {
             let ar = value.as_array().unwrap();

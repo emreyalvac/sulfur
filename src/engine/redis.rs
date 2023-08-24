@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+
 use async_trait::async_trait;
 use redis::{Client, Commands};
 use serde_json::Value;
@@ -7,18 +7,17 @@ use crate::core::engine::TEngine;
 
 pub struct Redis {
     connection: Client,
-    engine: Engine,
-    transform: Option<Transform>,
+    engine: Engine
 }
 
 #[async_trait]
 impl TEngine for Redis {
-    async fn new(engine: Engine, transform: Option<Transform>) -> Self {
+    async fn new(engine: Engine) -> Self {
         // TODO: Validation
 
         let connection = Client::open(engine.host.clone().unwrap()).unwrap();
 
-        Self { connection, engine, transform }
+        Self { connection, engine }
     }
 
     async fn get(&mut self) -> Value {
