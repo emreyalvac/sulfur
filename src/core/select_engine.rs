@@ -1,11 +1,11 @@
-use crate::config::config::{Engine, Transform};
+use crate::config::config::{Engine};
 use crate::core::engine::TEngine;
 use crate::engine::big_query::BigQuery;
 use crate::engine::elasticsearch::ElasticSearch;
 use crate::engine::mongo::Mongo;
 use crate::engine::redis::Redis;
 
-pub async fn select_engine(r#type: String, config: Engine, transform: Option<Transform>) -> Box<dyn TEngine> {
+pub async fn select_engine(r#type: String, config: Engine) -> Box<dyn TEngine> {
     // TODO: Move to Compile time
 
     if r#type == "Mongo" {

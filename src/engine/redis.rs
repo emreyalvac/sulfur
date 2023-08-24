@@ -2,7 +2,7 @@
 use async_trait::async_trait;
 use redis::{Client, Commands};
 use serde_json::Value;
-use crate::config::config::{Engine, Transform};
+use crate::config::config::{Engine};
 use crate::core::engine::TEngine;
 
 pub struct Redis {

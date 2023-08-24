@@ -4,7 +4,7 @@ use gcp_bigquery_client::Client;
 use gcp_bigquery_client::model::query_request::QueryRequest;
 use gcp_bigquery_client::model::table_data_insert_all_request::TableDataInsertAllRequest;
 use serde_json::Value;
-use crate::config::config::{Engine, Transform};
+use crate::config::config::{Engine};
 use crate::core::engine::TEngine;
 
 

@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use elasticsearch::{Elasticsearch, IndexParts, SearchParts};
 use elasticsearch::http::transport::Transport;
 use serde_json::{json, Value};
-use crate::config::config::{Engine, Transform};
+use crate::config::config::{Engine};
 use crate::core::engine::TEngine;
 
 pub struct ElasticSearch {

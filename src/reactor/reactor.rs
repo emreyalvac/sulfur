@@ -26,8 +26,8 @@ pub async fn _reactor() {
     let config = ConfigReader::new(args.config.as_str());
 
     for sulfur in config.sulfur {
-        let source = select_engine(sulfur.source.r#type.clone().unwrap(), (&sulfur).source.clone(), sulfur.transform.clone()).await;
-        let destination = select_engine(sulfur.destination.r#type.clone().unwrap(), (&sulfur).destination.clone(), sulfur.transform.clone()).await;
+        let source = select_engine(sulfur.source.r#type.clone().unwrap(), (&sulfur).source.clone()).await;
+        let destination = select_engine(sulfur.destination.r#type.clone().unwrap(), (&sulfur).destination.clone()).await;
 
         engines.push(EngineFlow { source, destination, transform: sulfur.transform });
     }
