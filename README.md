@@ -87,29 +87,12 @@ Sulfur empowers you to sculpt raw data into refined insights, making your data t
 
 Sulfur currently supports the following data storage engines:
 
-### Elasticsearch
-
-- **Type:** Database
-- **Description:** Use Elasticsearch as a data source or destination.
-- **Parameters:** `host`, `port`, `user`, `password`, `index`
-
-### MongoDB
-
-- **Type:** Database
-- **Description:** Use MongoDB as a data source or destination.
-- **Parameters:** `host`, `port`, `user`, `password`, `database`, `collection`
-
-### Redis
-
-- **Type:** In-Memory Data Store
-- **Description:** Use Redis as a data source or destination.
-- **Parameters:** `host`, `port`, `password`, `key`
-
-### BigQuery
-
-- **Type:** Data Warehouse
-- **Description:** Use Google BigQuery as a data destination.
-- **Parameters:** `project_id`, `dataset_id`, `table_id`, `credentials`
+| Engine    | Type                 | Description                                | Parameters                                                       |
+|-----------|----------------------|--------------------------------------------|------------------------------------------------------------------|
+| Elasticsearch | Database         | Use Elasticsearch as a data source or destination. | host, port, user, password, index                                |
+| MongoDB   | Database             | Use MongoDB as a data source or destination. | host, port, user, password, database, collection                 |
+| Redis     | In-Memory Data Store | Use Redis as a data source or destination. | host, port, password, key                                        |
+| BigQuery  | Data Warehouse       | Use Google BigQuery as a data destination. | project_id, dataset_id, table_id, credentials (service_key.json) |
 
 We're committed to expanding the list of supported engines to give you even more flexibility. Adding new platforms is a
 straightforward process, allowing you to tailor Sulfur to your evolving data needs.

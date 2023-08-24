@@ -29,9 +29,10 @@ impl TEngine for ElasticSearch {
         let search_response = self.connection
             .search(SearchParts::Index(&[self.engine.index.clone().unwrap().as_str()]))
             .body(json!({
-            "query": {
-                "match_all": {}
-            }
+                "size": self.engine.size.clone().unwrap(),
+                "query": {
+                    "match_all": {}
+                }
         }))
             .allow_no_indices(true)
             .send()
