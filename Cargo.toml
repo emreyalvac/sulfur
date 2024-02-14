@@ -16,3 +16,4 @@ gcp-bigquery-client = { version = "0.17.0", features = ["native-tls"] }
 clap = { version = "4.3.11", features = ["derive"] }
 pyo3 = { version = "0.19.1", features = ["auto-initialize"] }
 elasticsearch = "8.5.0-alpha.1"
+sqlite = "0.33.0"

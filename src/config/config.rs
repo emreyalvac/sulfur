@@ -39,6 +39,9 @@ pub struct Engine {
     // ElasticSearch
     pub index: Option<String>,
     pub size: Option<i32>,
+
+    // Sqlite
+    pub sqlite_database: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -52,3 +55,4 @@ pub struct Transform {
     pub file: Option<String>,
     pub r#fn: Option<String>,
 }
+
