@@ -49,18 +49,19 @@ impl TEngine for Sqlite {
         // without knowing the exact columns to get,
         // if we make end user specify the data columns,
         // performance improvements would be something to consider
-        self.connection
-            .iterate(query, |pairs| {
-                let mut hash_map = HashMap::new();
-                for &(name, value) in pairs.iter() {
-                    if let Some(value) = value {
-                        hash_map.insert(name, value);
-                    };
-                }
-                data.push(json!(hash_map));
-                true
-            })
-            .unwrap();
+        if let Err(err) = self.connection.iterate(query, |pairs| {
+            let mut hash_map = HashMap::new();
+            for &(name, value) in pairs.iter() {
+                if let Some(value) = value {
+                    hash_map.insert(name, value);
+                };
+            }
+            data.push(json!(hash_map));
+            true
+        }) {
+            println!("{}", err)
+        }
+
         serde_json::to_value(data).unwrap()
     }
 
