@@ -10,7 +10,6 @@ use sqlite::Connection;
 /// Sqlite engine for Sulfur
 ///
 /// Will create a new SQLite database if specified database in the config doesn't exist
-///
 pub struct Sqlite {
     connection: Connection,
     engine: Engine,
@@ -34,6 +33,7 @@ impl TEngine for Sqlite {
         }
     }
 
+    /// Get data from the specified sqlite database and table
     async fn get(&mut self) -> Value {
         let query = format!(
             "SELECT * FROM {}",
@@ -65,6 +65,8 @@ impl TEngine for Sqlite {
         serde_json::to_value(data).unwrap()
     }
 
+
+    /// Set transformed data into the specified sqlite database, table and column
     async fn set(&mut self, value: Value) -> bool {
         let table = match self.engine.sqlite_table.clone() {
             Some(table) => table,
