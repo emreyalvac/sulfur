@@ -39,6 +39,11 @@ pub struct Engine {
     // ElasticSearch
     pub index: Option<String>,
     pub size: Option<i32>,
+
+    // Sqlite
+    pub sqlite_database: Option<String>,
+    pub sqlite_table: Option<String>,
+    pub sqlite_column: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
