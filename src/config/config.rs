@@ -42,6 +42,7 @@ pub struct Engine {
 
     // Sqlite
     pub sqlite_database: Option<String>,
+    pub sqlite_table: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -55,4 +56,3 @@ pub struct Transform {
     pub file: Option<String>,
     pub r#fn: Option<String>,
 }
-
