@@ -40,9 +40,7 @@ impl TEngine for Sqlite {
             match self.engine.sqlite_table.clone() {
                 Some(table) => table,
                 None => {
-                    panic!(
-                        "trying use sqlite database without specifiying a database in the config"
-                    );
+                    panic!("trying use sqlite database without specifiying a table in the config");
                 }
             }
         );
@@ -55,7 +53,9 @@ impl TEngine for Sqlite {
             .iterate(query, |pairs| {
                 let mut hash_map = HashMap::new();
                 for &(name, value) in pairs.iter() {
-                    hash_map.insert(name, value.unwrap());
+                    if let Some(value) = value {
+                        hash_map.insert(name, value);
+                    };
                 }
                 data.push(json!(hash_map));
                 true
@@ -65,7 +65,27 @@ impl TEngine for Sqlite {
     }
 
     async fn set(&mut self, value: Value) -> bool {
-        //TODO: add the value to the table specified in the config
-        true
+        let table = match self.engine.sqlite_table.clone() {
+            Some(table) => table,
+            None => {
+                panic!("trying use sqlite database without specifiying a table in the config");
+            }
+        };
+
+        let column = match self.engine.sqlite_column.clone() {
+            Some(table) => table,
+            None => {
+                panic!("trying write a value to sqlite database without specifiying a column in the config");
+            }
+        };
+
+        // SQLite supports json,
+        // but the row should be specified
+        // and the specified row's type should be TEXT
+        let query = format!("INSERT INTO {table} ({column}) VALUES ('{value}');");
+        match self.connection.execute(query) {
+            Ok(_) => true,
+            Err(_) => false,
+        }
     }
 }

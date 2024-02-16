@@ -43,6 +43,7 @@ pub struct Engine {
     // Sqlite
     pub sqlite_database: Option<String>,
     pub sqlite_table: Option<String>,
+    pub sqlite_column: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
