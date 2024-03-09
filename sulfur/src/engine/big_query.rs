@@ -1,16 +1,14 @@
-
 use async_trait::async_trait;
 use gcp_bigquery_client::Client;
 use gcp_bigquery_client::model::query_request::QueryRequest;
 use gcp_bigquery_client::model::table_data_insert_all_request::TableDataInsertAllRequest;
 use serde_json::Value;
-use crate::config::config::{Engine};
+use sulfur_common::config::config::Engine;
 use crate::core::engine::TEngine;
-
 
 pub struct BigQuery {
     connection: Client,
-    engine: Engine
+    engine: Engine,
 }
 
 #[async_trait]

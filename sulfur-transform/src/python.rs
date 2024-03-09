@@ -3,7 +3,7 @@ use pyo3::{Py, PyAny, Python};
 use pyo3::prelude::PyModule;
 use pyo3::types::PyTuple;
 use serde_json::Value;
-use crate::config::config::Transform;
+use sulfur_common::config::config::Transform;
 
 pub fn transform(data: Value, transform: Option<Transform>) -> Value {
     if transform.is_some() {

@@ -1,4 +1,4 @@
-use crate::config::config::{Engine};
+use sulfur_common::config::config::Engine;
 use crate::core::engine::TEngine;
 use crate::engine::big_query::BigQuery;
 use crate::engine::elasticsearch::ElasticSearch;

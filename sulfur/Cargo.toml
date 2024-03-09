@@ -1,0 +1,20 @@
+[package]
+name = "sulfur-sink"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.29.1", features = ["full"] }
+mongodb = { version = "2.6.0" }
+async-trait = "0.1.71"
+futures = "0.3.28"
+serde = { version = "1.0.171" }
+serde_json = { version = "1.0.102" }
+serde_yaml = { version = "0.9.22" }
+redis = { version = "0.23.0", features = ["tokio-comp"] }
+gcp-bigquery-client = { version = "0.17.0", features = ["native-tls"] }
+clap = { version = "4.3.11", features = ["derive"] }
+elasticsearch = "8.5.0-alpha.1"
+sulfur-transform = { path = "../sulfur-transform" }
+sulfur-common = { path = "../sulfur-common" }
+sulfur-config = {path = "../sulfur-config"}

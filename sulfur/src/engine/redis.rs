@@ -1,13 +1,12 @@
-
 use async_trait::async_trait;
 use redis::{Client, Commands};
 use serde_json::Value;
-use crate::config::config::{Engine};
+use sulfur_common::config::config::Engine;
 use crate::core::engine::TEngine;
 
 pub struct Redis {
     connection: Client,
-    engine: Engine
+    engine: Engine,
 }
 
 #[async_trait]

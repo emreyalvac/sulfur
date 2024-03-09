@@ -1,7 +1,6 @@
-
 use async_trait::async_trait;
 use serde_json::Value;
-use crate::config::config::{Engine};
+use sulfur_common::config::config::Engine;
 
 #[async_trait]
 pub trait TEngine {
