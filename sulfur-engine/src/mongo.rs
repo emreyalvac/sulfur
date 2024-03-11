@@ -1,17 +1,15 @@
-
 use async_trait::async_trait;
 use futures::{StreamExt};
 use mongodb::bson::{Document};
 use mongodb::{bson, Client};
 use mongodb::options::{ClientOptions, ServerAddress};
 use serde_json::Value;
-use crate::config::config::{Engine};
-use crate::core::engine::TEngine;
-
+use sulfur_base::engine::engine::TEngine;
+use sulfur_base::flow::flow::Engine;
 
 pub struct Mongo {
     connection: Client,
-    engine: Engine
+    engine: Engine,
 }
 
 #[async_trait]

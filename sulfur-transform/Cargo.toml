@@ -1,0 +1,9 @@
+[package]
+name = "sulfur-transform"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pyo3 = { version = "0.19.1", features = ["auto-initialize"] }
+serde_json = { version = "1.0.102" }
+sulfur-base = {path = "../sulfur-base" }

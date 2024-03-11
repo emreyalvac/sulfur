@@ -1,0 +1,8 @@
+[package]
+name = "sulfur-persistence"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+surrealdb = "1.2.2"
+serde = { version = "1.0.197" }

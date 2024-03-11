@@ -1,12 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Config {
-    pub sulfur: Vec<Sulfur>,
-}
-
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Sulfur {
+pub struct Flow {
     pub name: String,
     pub cron: Option<String>,
     pub transform: Option<Transform>,
