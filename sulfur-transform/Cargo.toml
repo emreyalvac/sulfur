@@ -6,4 +6,4 @@ edition = "2021"
 [dependencies]
 pyo3 = { version = "0.19.1", features = ["auto-initialize"] }
 serde_json = { version = "1.0.102" }
-sulfur-common = {path = "../sulfur-common" }
+sulfur-base = {path = "../sulfur-base" }

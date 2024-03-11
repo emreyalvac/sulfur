@@ -1,0 +1,9 @@
+[package]
+name = "sulfur-api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.5.1"
+sulfur = {path = "../sulfur"}
+sulfur-base = {path = "../sulfur-base"}

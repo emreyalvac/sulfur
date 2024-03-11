@@ -2,8 +2,8 @@ use async_trait::async_trait;
 use elasticsearch::{Elasticsearch, IndexParts, SearchParts};
 use elasticsearch::http::transport::Transport;
 use serde_json::{json, Value};
-use sulfur_common::config::config::Engine;
-use crate::core::engine::TEngine;
+use sulfur_base::engine::engine::TEngine;
+use sulfur_base::flow::flow::Engine;
 
 pub struct ElasticSearch {
     connection: Elasticsearch,

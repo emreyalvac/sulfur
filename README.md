@@ -38,7 +38,7 @@ potential of Sulfur and turn raw data into refined intelligence.
 5. To run pipelines, use the terminal:
 
     ```sh
-    cargo run -- --config config.yml
+    cargo run -- --flow flow.yml
     ```
 
 ## Configuration (`config.yml`)

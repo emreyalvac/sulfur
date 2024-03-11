@@ -1,8 +1,0 @@
-[package]
-name = "sulfur-config"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-sulfur-common = {path = "./../sulfur-common"}
-serde_yaml = "0.9.32"

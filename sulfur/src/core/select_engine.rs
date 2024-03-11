@@ -1,22 +1,18 @@
-use sulfur_common::config::config::Engine;
-use crate::core::engine::TEngine;
-use crate::engine::big_query::BigQuery;
-use crate::engine::elasticsearch::ElasticSearch;
-use crate::engine::mongo::Mongo;
-use crate::engine::redis::Redis;
+use sulfur_base::engine::engine::TEngine;
+use sulfur_base::flow::flow::Engine;
+use sulfur_engine::big_query::BigQuery;
+use sulfur_engine::elasticsearch::ElasticSearch;
+use sulfur_engine::mongo::Mongo;
+use sulfur_engine::redis::Redis;
 
 pub async fn select_engine(r#type: String, config: Engine) -> Box<dyn TEngine> {
     // TODO: Move to Compile time
 
-    if r#type == "Mongo" {
-        return Box::new(Mongo::new(config).await);
-    } else if r#type == "Redis" {
-        return Box::new(Redis::new(config).await);
-    } else if r#type == "BigQuery" {
-        return Box::new(BigQuery::new(config).await);
-    } else if r#type == "ElasticSearch" {
-        return Box::new(ElasticSearch::new(config).await);
+    match r#type.as_str() {
+        "Mongo" => Box::new(Mongo::new(config).await),
+        "Redis" => Box::new(Redis::new(config).await),
+        "BigQuery" => Box::new(BigQuery::new(config).await),
+        "ElasticSearch" => Box::new(ElasticSearch::new(config).await),
+        _ => panic!("")
     }
-
-    return Box::new(Redis::new(config).await);
 }
